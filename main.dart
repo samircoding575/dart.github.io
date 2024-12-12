@@ -7,119 +7,182 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return MaterialApp(home: Home());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomeState extends State<Home> {
+  TextEditingController budgetController = TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  String result = ''; 
+  bool smartphoneSelected = false;
+  bool keyboardSelected = false;
+  bool mouseSelected = false;
+  bool monitorSelected = false;
+
+  
+  final int smartphonePrice = 200;
+  final int keyboardPrice = 5;
+  final int mousePrice = 15;
+  final int monitorPrice = 120;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('Exame'),
+        centerTitle: false,
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            SizedBox(height: 10),
+            MyTextField(controller: budgetController, hint: "Enter your budget"),
+            SizedBox(height: 10),
+            
+        
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: smartphoneSelected,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          smartphoneSelected = value ?? false;
+                        });
+                      },
+                    ),
+                    Text('Smartphone (200\$)'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: keyboardSelected,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          keyboardSelected = value ?? false;
+                        });
+                      },
+                    ),
+                    Text('Keyboard (5\$)'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: mouseSelected,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          mouseSelected = value ?? false;
+                        });
+                      },
+                    ),
+                    Text('Mouse (15\$)'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: monitorSelected,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          monitorSelected = value ?? false;
+                        });
+                      },
+                    ),
+                    Text('Monitor (120\$)'),
+                  ],
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    try {
+                      int budget = int.parse(budgetController.text);
+                      int totalPrice = 0;
+
+                      
+                      if (smartphoneSelected) totalPrice += smartphonePrice;
+                      if (keyboardSelected) totalPrice += keyboardPrice;
+                      if (mouseSelected) totalPrice += mousePrice;
+                      if (monitorSelected) totalPrice += monitorPrice;
+
+                      
+                      if (budget >= totalPrice) {
+                        int remainingMoney = budget - totalPrice;
+                        result = 'You can buy these items and still have \$${remainingMoney}.';
+                      } else {
+                        int neededMoney = totalPrice - budget;
+                        result = 'You need an additional \$${neededMoney} to buy these items.';
+                      }
+                    } catch (e) {
+                      result = 'Please enter a valid number for the budget.';
+                    }
+                  });
+                },
+                child: Text('Check'),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Result text
+            Center(
+              child: Text(
+                result,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+class MyTextField extends StatelessWidget {
+  const MyTextField({
+    super.key,
+    required this.controller,
+    required this.hint,
+  });
+
+  final TextEditingController controller;
+  final String hint;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 230,
+      height: 60,
+      child: TextField(
+        decoration:
+            InputDecoration(border: OutlineInputBorder(), hintText: hint),
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        controller: controller,
+      ),
+    );       
+  }
+}
+
