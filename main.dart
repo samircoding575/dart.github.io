@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'page2.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Home());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const Home(),
+    );
   }
 }
 
@@ -21,139 +25,146 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController budgetController = TextEditingController();
-
-  String result = ''; 
-  bool smartphoneSelected = false;
-  bool keyboardSelected = false;
-  bool mouseSelected = false;
-  bool monitorSelected = false;
-
-  
-  final int smartphonePrice = 200;
-  final int keyboardPrice = 5;
-  final int mousePrice = 15;
-  final int monitorPrice = 120;
+  final List<String> books = [
+    '1984',
+    'Manuscript Found in Accra',
+    'Powerless',
+    'None of the books',
+  ];
+  String selectedBook = '1984';
+  TextEditingController totalPagesController = TextEditingController();
+  TextEditingController pagesReadController = TextEditingController();
+  TextEditingController pagesPerUnitController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+  String readingSpeed = 'hour';
+  bool calculateDaysAndWeeks = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exame'),
-        centerTitle: false,
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        title: const Text('Book Reading Tracker'),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
       body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            MyTextField(controller: budgetController, hint: "Enter your budget"),
-            SizedBox(height: 10),
-            
-        
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: smartphoneSelected,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          smartphoneSelected = value ?? false;
-                        });
-                      },
-                    ),
-                    Text('Smartphone (200\$)'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: keyboardSelected,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          keyboardSelected = value ?? false;
-                        });
-                      },
-                    ),
-                    Text('Keyboard (5\$)'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: mouseSelected,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          mouseSelected = value ?? false;
-                        });
-                      },
-                    ),
-                    Text('Mouse (15\$)'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value: monitorSelected,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          monitorSelected = value ?? false;
-                        });
-                      },
-                    ),
-                    Text('Monitor (120\$)'),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              DropdownButton<String>(
+                value: selectedBook,
+                onChanged: (value) {
                   setState(() {
-                    try {
-                      int budget = int.parse(budgetController.text);
-                      int totalPrice = 0;
-
-                      
-                      if (smartphoneSelected) totalPrice += smartphonePrice;
-                      if (keyboardSelected) totalPrice += keyboardPrice;
-                      if (mouseSelected) totalPrice += mousePrice;
-                      if (monitorSelected) totalPrice += monitorPrice;
-
-                      
-                      if (budget >= totalPrice) {
-                        int remainingMoney = budget - totalPrice;
-                        result = 'You can buy these items and still have \$${remainingMoney}.';
-                      } else {
-                        int neededMoney = totalPrice - budget;
-                        result = 'You need an additional \$${neededMoney} to buy these items.';
-                      }
-                    } catch (e) {
-                      result = 'Please enter a valid number for the budget.';
-                    }
+                    selectedBook = value!;
                   });
                 },
-                child: Text('Check'),
+                items: books.map((book) {
+                  return DropdownMenuItem(
+                    value: book,
+                    child: Text(book),
+                  );
+                }).toList(),
               ),
-            ),
-            SizedBox(height: 20),
+              const SizedBox(height: 10),
+              MyTextField(
+                  controller: totalPagesController,
+                  hint: 'Enter Total Number of Pages'),
+              const SizedBox(height: 10),
+              MyTextField(
+                  controller: pagesReadController,
+                  hint: 'Enter Pages Read So Far'),
+              const SizedBox(height: 10),
+              MyTextField(
+                  controller: pagesPerUnitController,
+                  hint: 'Pages Read Per Hour/Day/Week'),
+              const SizedBox(height: 10),
+              const Text(
+                'Reading Speed:',
+                style: TextStyle(fontSize: 16),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: 'hour',
+                    groupValue: readingSpeed,
+                    onChanged: (value) {
+                      setState(() {
+                        readingSpeed = value.toString();
+                      });
+                    },
+                  ),
+                  const Text('Hour'),
+                  Radio(
+                    value: 'day',
+                    groupValue: readingSpeed,
+                    onChanged: (value) {
+                      setState(() {
+                        readingSpeed = value.toString();
+                      });
+                    },
+                  ),
+                  const Text('Day'),
+                  Radio(
+                    value: 'week',
+                    groupValue: readingSpeed,
+                    onChanged: (value) {
+                      setState(() {
+                        readingSpeed = value.toString();
+                      });
+                    },
+                  ),
+                  const Text('Week'),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: calculateDaysAndWeeks,
+                    onChanged: (value) {
+                      setState(() {
+                        calculateDaysAndWeeks = value!;
+                      });
+                    },
+                  ),
+                  const Text('Calculate Days/Weeks per Hour'),
+                ],
+              ),
+              const SizedBox(height: 10),
+              MyTextField(controller: notesController, hint: 'Enter Notes'),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () {
+                  final int totalPages =
+                      int.tryParse(totalPagesController.text) ?? 0;
+                  final int pagesRead =
+                      int.tryParse(pagesReadController.text) ?? 0;
+                  final int pagesPerUnit =
+                      int.tryParse(pagesPerUnitController.text) ?? 0;
 
-            // Result text
-            Center(
-              child: Text(
-                result,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Page2(
+                        bookName: selectedBook,
+                        notes: notesController.text,
+                        totalPages: totalPages,
+                        pagesRead: pagesRead,
+                        pagesPerUnit: pagesPerUnit,
+                        readingSpeed: readingSpeed,
+                        calculateDaysAndWeeks: calculateDaysAndWeeks,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('Next'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -176,13 +187,14 @@ class MyTextField extends StatelessWidget {
       width: 230,
       height: 60,
       child: TextField(
-        decoration:
-            InputDecoration(border: OutlineInputBorder(), hintText: hint),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: hint,
+        ),
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         controller: controller,
       ),
-    );       
+    );
   }
 }
-
